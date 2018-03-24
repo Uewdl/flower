@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Slim 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" type='text/css' />
+    <link rel="stylesheet" href="/static/open-iconic-master/font/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="https://bootswatch.com/4/minty/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src='/static/bootstrap/js/bootstrap.min.js'></script>
+    <style>
+        html {
+            /* background: linear-gradient(45deg, #DE6262 10%, #FFB88C 90%);
+            height: 100vh; */
+        }
+
+        body {
+            background: url('/static/images/bg-mask.jpg') no-repeat right top white;                                                                                                                                      
+        }
+
+        .nav {
+            border-bottom: 2px solid #78C2AD;
+            background: white;
+            box-shadow: 0 2px 12px 4px rgba(0, 0, 0, .05);
+        }
+
+        /* .nav a{
+            border-right: 1px solid #efefef;
+        } */
+
+        .nav a span.oi {
+            font-size: 150%;
+        }
+
+        .nav a.active {
+            border-radius: 0;
+        }
+
+        .nav a.active span.oi {
+            /* color: #78C2AD; */
+            color: white;
+        }
+        .card{
+            box-shadow: 0 2px 12px 4px rgba(0, 0, 0, .05);
+            /* background: url('/static/images/card-bg.jpg') no-repeat right bottom; */
+            margin:5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav nav-pills nav-fill sticky-top">
+        <a class="nav-item nav-link" href="/">
+            记录
+            <br/>
+            <span class="oi oi-list" title="icon name" aria-hidden="true"></span>
+        </a>
+        <a class="nav-item nav-link active" href="#">
+            库存
+            <br>
+            <span class="oi oi-beaker" title="icon name" aria-hidden="true"></span>
+        </a>
+        <a class="nav-item nav-link" href="/meta">
+            花材
+            <br>
+            <span class="oi oi-lightbulb" title="icon name" aria-hidden="true"></span>
+        </a>
+        <a class="nav-item nav-link" href="#">
+            报表
+            <br>
+            <span class="oi oi-bar-chart" title="icon name" aria-hidden="true"></span>
+        </a>
+    </nav>    
+    <div class="container mt-2">
+            <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="#">Home</a></li>
+                      <li class="breadcrumb-item"><a href="#">Library</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">Data</li>
+                    </ol>
+                  </nav>
+        <div class="tool mb-2">
+            <button type="button" class="btn btn-primary btn-sm mb-1"  data-toggle="modal" data-target="#new-item">
+                <span class="oi oi-plus" title="icon name"></span> 添加库存</button>
+        </div>
+        <hr>
+        <?php while($row = $stm_repository->fetch()):?>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><?=$row['name'];?></h5>
+                    <p class="card-text">一共<b class='text-info'><?=$row['count'];?></b>枝，价值<b class='text-warning'><?=$row['amount'];?></b>元，剩余<b class='text-danger'><?=$row['remaining'];?></b>枝</p>
+                    <p><b>添加日期：</b><?=$row['created_at'];?></p>
+                    <div class="float-right">
+                            <a href='###'><span class="oi oi-pencil" title="icon name" aria-hidden="true"></span></a>
+                            <a href='###' class="text-danger ml-2"><span class="oi oi-x" title="icon name" aria-hidden="true"></span></a>                         
+                    </div> 
+                </div>
+            </div>
+            <?php endwhile;?>
+        <!-- <div class="row">
+            
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+
+
+<div class="modal fade" id="new-item" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">库存信息</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method='post'>
+      <div class="modal-body">        
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">数量:</label>
+            <input type="number" class="form-control" id="recipient-name" name='count' required>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">金额</label>
+            <input type="number" class="form-control" id="recipient-name" name='amount' required>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">花材</label>
+            <select name="meta_id"  class="form-control" required>
+            <?php while($row = $stm->fetch()):?>
+                            <option value="<?=$row['id'];?>"><?=$row['name'];?></option>
+    <?php endwhile;?>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">添加日期</label>
+            <input type="date" class="form-control" id="recipient-name" name='created_at' required>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">备注</label>
+            <textarea class="form-control" id="recipient-name" name='remark'></textarea>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">添加</button>
+      </div>
+      <form>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>
