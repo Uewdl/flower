@@ -2,6 +2,7 @@
 // DIC configuration
 use Slim\Http\Request;
 use Slim\Http\Response;
+dl('pdo_sqlite.so');
 require 'helper.php';
 $container = $app->getContainer();
 
